@@ -83,13 +83,19 @@ namespace Wumpus
             }
         }
 
-        private bool IsAdjacentToWumpus(int x, int y)
+        private bool IsCloseToWumpus(int x, int y)
         {
             // Проверка на соседство с Wumpus.
-            return (Math.Abs(x - wumpusX) == 1 && y == wumpusY) || (x == wumpusX && Math.Abs(y - wumpusY) == 1);
+            return IsWumpus(x - 1, y) || IsWumpus(x + 1, y) || IsWumpus(x, y - 1) || IsWumpus(x, y + 1);
         }
 
-        private bool IsAdjacentToPit(int x, int y)
+        private bool IsWumpus(int x, int y)
+        {
+            return IsValid(x, y) && MapSquare[x][y] == 'W';
+        }
+            
+
+        private bool IsCloseToPit(int x, int y)
         {
             // Проверка на соседство с ямами.
             return IsPit(x - 1, y) || IsPit(x + 1, y) || IsPit(x, y - 1) || IsPit(x, y + 1);
@@ -143,7 +149,8 @@ namespace Wumpus
 
         public void MovePlayer(int newX, int newY)
         {
-            if (!IsValid(newX, newY) || Visited[newX][newY])
+            //Теперь игрок может ходить уже и по пройденым клеткам
+            if (!IsValid(newX, newY))
             {
                 Console.WriteLine("Invalid move.");
                 return;
